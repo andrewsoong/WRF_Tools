@@ -1,0 +1,81 @@
+netcdf camrun_branch2.clm2.h0.0062-01-01-21600 {
+dimensions:
+	lon = 128 ;
+	lat = 64 ;
+	time = UNLIMITED ; // (1 currently)
+	levsoi = 10 ;
+variables:
+	float lon(lon) ;
+		lon:long_name = "coordinate longitude" ;
+		lon:units = "degrees_east" ;
+	float lat(lat) ;
+		lat:long_name = "coordinate latitude" ;
+		lat:units = "degrees_north" ;
+	float time(time) ;
+		time:logname = "time" ;
+		time:units = "days since 0000-09-01 00:00:00" ;
+		time:calendar = "noleap" ;
+	float levsoi(levsoi) ;
+		levsoi:long_name = "coordinate soil levels" ;
+		levsoi:units = "m" ;
+	float ZSOI(levsoi, lat, lon) ;
+		ZSOI:long_name = "soil depth" ;
+		ZSOI:units = "m" ;
+		ZSOI:_FillValue = 1.e+36f ;
+		ZSOI:missing_value = 1.e+36f ;
+	float DZSOI(levsoi, lat, lon) ;
+		DZSOI:long_name = "soil thickness" ;
+		DZSOI:units = "m" ;
+		DZSOI:_FillValue = 1.e+36f ;
+		DZSOI:missing_value = 1.e+36f ;
+	float WATSAT(levsoi, lat, lon) ;
+		WATSAT:long_name = "saturated soil water content (porosity)" ;
+		WATSAT:units = "mm3/mm3" ;
+		WATSAT:_FillValue = 1.e+36f ;
+		WATSAT:missing_value = 1.e+36f ;
+	float H2OSOI(time, levsoi, lat, lon) ;
+		H2OSOI:long_name = "volumetric soil water" ;
+		H2OSOI:units = "mm3/mm3" ;
+		H2OSOI:cell_method = "time: mean" ;
+		H2OSOI:_FillValue = 1.e+36f ;
+		H2OSOI:missing_value = 1.e+36f ;
+	float SOILICE(time, levsoi, lat, lon) ;
+		SOILICE:long_name = "soil ice" ;
+		SOILICE:units = "kg/m2" ;
+		SOILICE:cell_method = "time: mean" ;
+		SOILICE:_FillValue = 1.e+36f ;
+		SOILICE:missing_value = 1.e+36f ;
+	float SOILLIQ(time, levsoi, lat, lon) ;
+		SOILLIQ:long_name = "soil liquid water" ;
+		SOILLIQ:units = "kg/m2" ;
+		SOILLIQ:cell_method = "time: mean" ;
+		SOILLIQ:_FillValue = 1.e+36f ;
+		SOILLIQ:missing_value = 1.e+36f ;
+	float TG(time, lat, lon) ;
+		TG:long_name = "ground temperature" ;
+		TG:units = "K" ;
+		TG:cell_method = "time: mean" ;
+		TG:_FillValue = 1.e+36f ;
+		TG:missing_value = 1.e+36f ;
+	float TSOI(time, levsoi, lat, lon) ;
+		TSOI:long_name = "soil temperature" ;
+		TSOI:units = "K" ;
+		TSOI:cell_method = "time: mean" ;
+		TSOI:_FillValue = 1.e+36f ;
+		TSOI:missing_value = 1.e+36f ;
+
+// global attributes:
+		:conventions = "CF1.0" ;
+		:history = "Tue Nov 25 21:18:30 2008: ncks -av ZSOI,DZSOI,WATSAT,H2OSOI,SOILICE,SOILLIQ,TG,TSOI /misc/data2_eli/abbot/CAM/2001/camrun_branch2.clm2.h0.0062-01-01-21600.nc /misc/data2_eli/abbot/CAM/2001/tmp\n",
+			"created on 11/25/08 10:17:48" ;
+		:logname = "abbot" ;
+		:host = "" ;
+		:source = "Community Land Model: CLM2" ;
+		:version = "$Name: cam3_1_brnchT_p2 $" ;
+		:revision_id = "$Id: histFileMod.F90,v 1.19.6.22 2005/03/10 21:01:56 rosinski Exp $" ;
+		:case_title = "" ;
+		:case_id = "camrun_branch2" ;
+		:Surface_dataset = "clms_64x128_USGS_c030605.nc" ;
+		:Initial_conditions_dataset = "clmi_0000-09-01_64x128_T42_USGS_c030609.nc" ;
+		:PFT_physiological_constants_dataset = "pft-physiology" ;
+}

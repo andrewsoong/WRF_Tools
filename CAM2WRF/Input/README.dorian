@@ -1,0 +1,22 @@
+This file describes a series of about one year (already equilibrated)
+performed for Eli and Mauricio as initial and boundary conditions for
+their WRF experiments. Each run has output every 6 hr. The runs are
+numbered 2001-2005 and the output is contained in the directory
+/misc/data2_eli/abbot/CAM/. Files describing the location of output
+files and their time, for use by Eli's netcdf -> binary program, are
+in this directory and are named CAM2WRF-????.input.
+
+Description of runs:
+
+2001 - LO OHT (derived from 1st 10 years of CCSM IPCC 1%/yr to 4XCO2
+run) and CO2=280 ppm
+
+2002 - HI OHT (derived from last 10 years of CCSM IPCC 1%/yr to 4XCO2
+run) and CO2=1200 ppm
+
+2003 - OHT derived from modern climate, CO2=280 ppm
+
+2004 - OHT derived from modern climate, CO2=1120 ppm
+
+2005 - OHT derived from modern climate, CO2=4480 ppm
+

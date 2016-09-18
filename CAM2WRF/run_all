@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# create b.c. and i.c. for all CAM runs.  see run_one for more documentation.
+
+# cd ~/WRF_Mauricio/; \rm ~/WRF_Mauricio/Output/run_all.out; nohup run_all > Output/run_all.out&
+
+cd ~/WRF_Mauricio/Output/; \rm wrfbdy_d01 wrflowinp_d01 wrfinput_d01
+
+for case in 2003 2004 2005
+  do
+  ln -f -s ~/WRF_Mauricio/Input/CAM2WRF-$case.input ~/WRF_Mauricio/Input/CAM2WRF.input
+  cd ~/WRF_Mauricio/; run_one_case
+  cd ~/WRF_Mauricio/Output/; mkdir $case; mv *.log wrfbdy_d01 wrflowinp_d01 wrfinput_d01 $case
+  \rm FILE\:*; \rm met_em*
+done

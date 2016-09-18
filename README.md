@@ -8,4 +8,4 @@ WRF_GEOGRID: These programs are used to change the land surface data of WRF. Det
 
 WRFDA_STAGE_IV: This converter utility is to reformat the NCEP Stage IV observations into the ASCII format that WRFDA can ingest. 
 
-
+CAM2WRF: This utility is to drive WRF by CAM output

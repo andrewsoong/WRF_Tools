@@ -1,0 +1,25 @@
+#!/bin/bash
+
+dir="/home3_hn/yyao/CAM5/"
+pdir=`pwd`
+files_str="cur.cam.h1.YEAR-02"
+
+out_file='CAM2WRF.input'
+
+rm -f $out_file
+
+cd $dir
+list=`echo $files_str*`
+n=`echo $files_str* |wc -l`
+cd $pdir
+for file in $list
+do
+  file2=${file:0:4}'clm2'${file:7}
+
+  sec=${file:22:5}
+  hr=`awk -v sec=$sec 'BEGIN{printf("%.2d\n",sec/3600.)}'`
+  date='YEAR'${file:15:6}'_'$hr':00:00'
+  
+  echo \"$dir$file\"' '\"$dir$file2\"' '\"$date\" >> $out_file
+
+done

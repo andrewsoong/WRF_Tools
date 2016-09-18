@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# run all steps of WPS to convert CAM output to WRF initial and
+# boundary conditions; see comments at header of fortran file in this
+# directory for more info.  to run this, use crest, not swell, and the
+# following command:
+# cd ~/WRF_Mauricio/; \rm ~/WRF_Mauricio/Output/run_one_case.out; nohup run_one_case > Output/run_one_case.out&
+
+# clean results of previous runs:
+cd ~/WRF_Mauricio/Output/; \rm CAM2WRF?.log metgrid.log FILE\:* met_em.* wrfbdy_d01 wrfinput_d01
+
+# CAM to intermediate format:
+cd ~/WRF_Mauricio/; ifort -c -CB -par_report0 -vec_report0 -I/opt/netcdf-3.6.0-p1/include/ CAM_netcdf_to_WRF_intermediate.f90; ifort CAM_netcdf_to_WRF_intermediate.o -L/opt/netcdf-3.6.0-p1/lib/ -lnetcdf; ./a.out
+
+# intermediate to netcdf:
+cd ~/WRF_Mauricio/Output/; ./metgrid.exe
+
+# final step: produce initial and boundary condition files:
+# note that I copied real.exe and its namelist input file to the Output/ directory:
+cd ~/WRF_Mauricio/Output/; ./real.exe
