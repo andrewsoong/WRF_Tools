@@ -1,0 +1,6 @@
+This script is used to create force file for WRF single column model from a series of met_em files
+
+1.need to change force_layers in forcing_file.cdl, vertical levels-1=force_layers, without surface layer
+2.need to change the domain of met_em files, which are in build_scm_forcing.csh and build_scm_forcing.ncl
+3.change DX and DY in forcing_file.cdl
+4.other changes according to the instruction of build_scm_forcing.csh
