@@ -1,0 +1,127 @@
+====================
+Bham case: wm (West Midland)
+====================
+
+1. to convert data into binary format
+!!! edit write.wmcat.f90
+pgf90 -o write.wmcat.exe write.wmcat.f90 write_geogrid.o
+write.wmcat.exe
+!!!
+!!! mv 00001-00053.00001-00036 urbbham_cat/
+mv 00001-00100.00001-00100 urbbham_cat/
+od -t u1 urbbham_cat/00001-00100.00001-00100
+
+pgf90 -o write.wmfrac.exe write.wmfrac.f90 write_geogrid.o
+write.wmfrac.exe
+!!! mv 00001-00053.00001-00036 urbbham_frac/
+mv 00001-00100.00001-00100 urbbham_frac/
+## using 'little endian' for 'od' checking: in 'index', use 'endian = little'
+
+%%% correct an error by Richard Bassett: 2012-0718
+%%% wrf4.cat.mat.new.dat is produced but 'read' has an error ==> merge all 100 lines into 1 line
+cd   /data/snow3/ming/data/WRF/geog
+mv urbbham_cat urbbham_cat_old 
+cp -r urbbham_cat_old  urbbham_cat
+
+cd /home/caix/WRFtest/new.landuse
+ln -sf wrf4.cat.mat.new.dat.1line wrf4.cat.mat.dat
+write.wmfrac.exe
+
+cp 00001-00100.00001-00100   /data/snow3/ming/data/WRF/geog/urbbham_cat
+
+
+!!!od -t u2 urbbham_frac/00001-00053.00001-00036 
+od -t u2 urbbham_frac/00001-00100.00001-00100
+!!! the output shows integers with one digit shifted to the right
+
+2. to create an index file
+
+
+
+
+====================
+binary data file
+====================
+
+
+(A)
+in geogrid/src:
+
+g77 -c read_array_new.f
+gcc -c write_geogrid.c
+g77 write_geogrid.o array.o -o test
+
+./test
+
+This will give you a file of the form
+00001-24580.00001-28680
+
+----- display the data ---------
+od -t u1 00001-24580.00001-28680
+--------------------------------
+
+----- small test ---------
+pgcc -D_UNDERSCORE -c write_geogrid.c
+  !!! ignore the warnings of redefinition of BIG_ENDIAN & LITTLE_ENDIAN
+pgf77 test.write.geog.f write_geogrid.o
+a.out
+
+*** 2 byte little/big endian for 6 values: (-2,-1,0,1,2,3)
+*** od -t u1 00001-00002.00001-00003 
+little: 254 255 255 255   0   0   1   0   2   0   3   0
+big:    255 254 255 255   0   0   0   1   0   2   0   3
+
+--------------------------------
+
+
+
+(B)
+In your static geography data directory (where there are directories of the form topo_30s), make 
+a directory called e.g. high_res
+
+Copy the above file (00001-24580.00001-28680) into high_res
+
+Copy an "index" file from one of the other topo_30s (e.g.) directories into the high_res directory, 
+and modify this for your own ends. You will have to change some of the parameters in here, e.g. 
+known_x etc. All these things are defined in the WRF user guide.
+
+
+(C) In you nemalist.wps file, to use the above, you can change the geography that is used by 
+doing something like
+
+geog_data_res = '2m','high_res+30s',
+
+
+====================
+GEOGRID.TBL
+====================
+Dear Dr. Xiaoming
+(i am the PhD student of Alberto)
+I send you an example of geogrid.tbl modified with a new variable (URBAN_FRACTION)
+and with two new entries (priority 2 and 3)for an existing field LANDUSEF.
+
+To prepare a new geogrid data set you need to:
+
+1)write the new data in binary format
+
+2)create an index metadata file for the new data set. Below you can see an example
+    type=continuous
+    projection=regular_ll
+    missing_value=-999900.
+    dy=0.004491602477
+    dx=0.005866808832
+    known_x=1.0
+    known_y=1.0           # <- edit
+    known_lat = 40.04 
+    known_lon = -4.207
+    wordsize = 4
+    endian=little
+    signed=yes
+    tile_x=161            # <- edit
+    tile_y=181             # <- edit
+    tile_z=1
+    units="dimensionless"
+    scale_factor=0.01
+    description="Urban fraction"
+
+3)Add/edit entry for the data in the geogrid.tbl

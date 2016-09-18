@@ -1,0 +1,101 @@
+This converter utility is to reformat the NCEP Stage IV observations 
+into the ASCII format that WRFDA can ingest. 
+The following instructions take you through a sequence of steps to get
+the configuration of precip_converter up and running.
+
+1. Included in this utility are,
+   -------------------------------
+   - README,
+   - makefile, 
+   - write_rainobs.f90,
+   - run.ksh,  
+   - sample data: ST4.2008020518.06h  
+                  (data ordered from:  
+		   http://data.eol.ucar.edu/codiac/dss/id=21.093
+		   you should extract a compressed file, such as,
+		   gunzip ST4.2008020518.06h.Z)
+                                      
+2. Required libraries,
+   -------------------
+   - w3lib  
+   - g2lib  
+   
+     If not already installed on your system, 
+     please download from http://www.nco.ncep.noaa.gov/pmb/codes/GRIB2/.
+        
+3. Compile the code,
+   -----------------
+   - Edit the file called makefile in this directory so that library path and the compiler
+     options match those available on your machine. A selection of compiler flags for  
+     different platforms are listed if you are running using one of these compilers you
+     should be able to just uncomment the relevant section.
+     
+   - To compile the code, type the command,
+     
+             make
+     
+     When precip_converter has been successfully compiled, 
+     the directory will contain executable write_rainobs.exe. 
+
+4. Usage: 
+   ------
+4.1 Convert one grib file,
+    ----------------------
+    - ./write_rainobs.exe FILE_SUFFIX DATA_TIME DAT_DIR
+
+      Example: ./write_rainobs.exe  2008020518.06h 2008-02-05_17:59:59 ./
+
+      Output file: ob.rain.yyyymmddhh.xxh
+                  (The 'yyyymmddhh' in the file name is the ending hour of the accumulation period,
+	          'xx' (=01,06 or 24) is the accumulating length.)
+
+4.2 Convert several files,
+    ----------------------
+   - Edit the file called run.ksh.
+   - Run the .ksh like this "run.ksh".
+
+
+5. Information about output file,  
+   ------------------------------
+   - ob.rain.yyyymmddhh.xxh is an ASCII file that contains a header section 
+     and is followed by observations(listed below).
+     The format of the file is similar to radar observations, 
+     but ELEVATION, ID, and HEIGHT are assigned default values
+     for they are not used in assimilation process now. 
+
+     TOTAL = 987601,MISS. =-888888.,
+     INFO  = PLATFORM, DATE, LEVELS, LATITUDE, LONGITUDE, ELEVATION, ID.
+     EACH  = HEIGHT, RAINFALL DATA, QC, ERROR
+     #------------------------------------------------------------------------------#
+     FM-129 RAIN  2008-02-05_17:59:59      1      23.117      -119.022      99.9 12345
+         99.900 -888888.000  88       2.000
+     FM-129 RAIN  2008-02-05_17:59:59      1      23.125      -118.988      99.9 12345
+         99.900 -888888.000  88       2.000
+     FM-129 RAIN  2008-02-05_17:59:59      1      23.132      -118.955      99.9 12345
+         99.900 -888888.000  88       2.000
+
+6. Others
+   ------
+    
+6.1 More information about NCEP Stage IV
+    ------------------------------------
+    - NCEP Stage IV archived data are available on the NCAR CODIAC web page at,
+      http://data.eol.ucar.edu/codiac/dss/id=21.093
+    - For more information about NCEP Stage IV, see the NCEP Stage IV Q&A Web page at,
+      http://www.emc.ncep.noaa.gov/mmb/ylin/pcpanl/QandA/
+    - References,
+      Lin, Y., and K. E. Mitchell, 2005: The NCEP stage II/IV hourly precipitation analyses: 
+         Development and applications. Preprints, 19th Conf. 
+         on Hydrology, San Diego, CA, Amer. Meteor. Soc., CD-ROM, 1.2.   
+      Baldwin, M.E., and K.E. Mitchell, 1998: Progress on the NCEP hourly multi-sensor U.S. 
+         precipitation analysis for operations and GCIP research. Preprints, 
+	 2nd Symposium on Integrated Observing Systems, 78th AMS Annual Meeting, 10-11.
+
+6.2 How about to reformat user's own precipitation data instead of NCEP Stage IV ?
+    ------------------------------------------------------------------------------
+    - It is the responsibility of the user to write a Fortran main program and 
+      call subroutine writerainobs(in write_rainobs.f90) to generate their own precipitation data. 
+
+6.3  Any questions, suggestions, additions, bug reports, etc,
+     let us know at wrfhelp@ucar.edu
+
