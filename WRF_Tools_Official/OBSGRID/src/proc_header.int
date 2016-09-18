@@ -1,0 +1,7 @@
+SUBROUTINE proc_header ( filename , bhid , bhrd , nml )
+   USE namelist
+   CHARACTER ( LEN = 132 ) , INTENT ( IN )      :: filename
+   INTEGER , DIMENSION(50)                      :: bhid
+   REAL    , DIMENSION(20)                      :: bhrd
+   TYPE ( all_nml ) , INTENT ( IN )             :: nml
+END SUBROUTINE proc_header

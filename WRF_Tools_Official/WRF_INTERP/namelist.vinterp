@@ -1,0 +1,31 @@
+&io
+ path_to_input = '/glade/scratch/sherrie/testing/'
+ path_to_output = '/glade/scratch/sherrie/testing/wrf/'
+ root_name = 'wrfout'
+ grid_id = 1
+ start_date =  '1991-01-01_00'
+ leap_year  = .TRUE.
+ debug = .FALSE.
+/
+
+&interp_in
+  interp_levels = 1000.,800.,500 
+  extrapolate = 1 
+  unstagger_grid = .FALSE. 
+  vert_coordinate = 'pres'
+/
+
+!interp_levels examples:
+!1000,800,5500,100,12.5
+!1000,800,700,-100,50
+!50,-700,20
+!You need at least two interpolation levels.
+!The program will not interpolate just one level.
+!Expected values for vert_coordinate along with units
+!
+!pressure, pres            hPa
+!log_pres                  hPa 
+!ght_msl                   km
+!ght_agl                   km
+!theta                     K
+!thea-e                    K

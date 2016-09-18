@@ -1,0 +1,54 @@
+
+p_interp will interpolate WRF-ARW netCDF output files to user specified pressure levels.
+
+------------- Compile ------------------------------
+
+A netCDF library is needed for compiling the code.  The MPI library is needed for running 
+parallel.  There are many options for compiling at the top of p_interp.F90.
+
+Serial Compile
+
+      pgf90 p_interp.F90 -L/usr/local/netcdf/lib -lnetcdf -lm  \
+      -I/usr/local/netcdf/include  -Mfree  -o p_interp
+
+Parallel Compile:
+
+      mpxlf_r -qfree=f90 -L/usr/local/netcdf/lib -lnetcdf -lm \
+      -I/usr/local/netcdf/include -o p_interp p_interp.F90 -WF,-D_MPI
+
+If successful, this will create an executable called p_interp.
+
+------------- Namelist Options ----------------------
+
+New options in the namelist:
+
+ met_em_output  = .FALSE.   Set to .TRUE. to calculate and output fields needed in
+                            a met_em file.  These files are used as input to real.exe.
+ split_output   = .FALSE.   Set to .TRUE. to output each time in the input file to
+                            a separate file.
+ mpi_debug      = .FALSE.   Set to .TRUE. for additional output that may be helpful
+                            when debugging parallel code.
+
+
+Info about running with met_em_output = .TRUE..  Other options need to be set in the namelist:
+
+split_output = .TRUE.
+unstagger_grid = .FALSE.
+extrapolate = 1
+process = 'all'
+
+If you forget to set any of the first 3 options, they will be reset automatcially in the code.
+If process is set to 'list', the code will stop and the user will have to set process to 'all'.
+
+p_interp will stop if met_em files already exist.  This is to avoid overwriting any met_em files
+created by metgrid.exe.
+
+------------- Run ------------------------------
+
+To run serially:
+
+unix> p_interp
+
+To run parallel (Aix):
+
+      mpirun.lsf p_interp

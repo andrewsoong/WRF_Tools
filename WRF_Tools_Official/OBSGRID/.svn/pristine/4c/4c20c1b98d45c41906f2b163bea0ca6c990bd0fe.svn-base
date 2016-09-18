@@ -1,0 +1,31 @@
+SUBROUTINE proc_get_info_header ( print_header , &
+iewd , jnsd , kbu , grid_id , map_projection , expanded , iewe , jnse , &
+dxc , lat_center , lon_center , cone_factor , true_lat1 , true_lat2 , pole , &
+dxd , ptop , help )
+  
+   LOGICAL            :: print_header
+   
+   INTEGER , OPTIONAL :: iewd              , & ! domain i size
+                         jnsd              , & ! domain j size
+                         kbu               , & ! num vert levs, bottom up
+                         grid_id           , & ! grid ID
+                         map_projection    , & ! 1=LC, 2=PS, 3=MC
+                         expanded          , & ! 1=expanded; 0=not expanded
+                         iewe              , & ! expanded grid i size
+                         jnse                  ! expanded grid j size
+                                                        
+   REAL ,    OPTIONAL :: dxc               , & ! coarse grid distance
+                         lat_center        , & ! center latitude
+                         lon_center        , & ! central longitude
+                         cone_factor       , & ! cone factor
+                         true_lat1         , & ! lat of true projection
+                         true_lat2         , & ! lat of true projection
+                         pole              , & ! location of pole in latitude
+                         dxd                   ! domain grid distance
+   
+                                                        
+   REAL ,    OPTIONAL :: ptop                  ! top of analysis, lid
+                                                        
+   LOGICAL , OPTIONAL :: help                  ! T/F: print stuff only
+
+END SUBROUTINE proc_get_info_header

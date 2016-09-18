@@ -1,0 +1,51 @@
+#!/bin/csh -f
+
+if ( ! -e configure.oa ) then
+	echo "Do 'configure' first"
+	exit ( 1 ) 
+endif
+
+if  ( ( ! $?NETCDF ) && ( -d netcdf_links ) ) then
+	setenv NETCDF `pwd`/netcdf_links
+	setenv temp_netcdf 1
+else
+	setenv temp_netcdf 0
+endif
+
+echo " "
+echo "**** Compiling oa ****"
+echo " "
+
+if      ( ${#argv} == 0 ) then
+( cd src ; make -i -r all )
+     if ( -e src/obsgrid.exe ) then
+             ln -sf src/obsgrid.exe .
+     endif
+     if ( -e src/plot_level.exe ) then
+             ln -sf src/plot_level.exe .
+     endif
+     if ( -e src/plot_soundings.exe ) then
+             ln -sf src/plot_soundings.exe .
+     endif
+else if ( $1 == obsgrid ) then
+( cd src ; make -i -r obsgrid.exe )
+     if ( -e src/obsgrid.exe ) then
+             ln -sf src/obsgrid.exe .
+     endif
+else if ( $1 == utils ) then
+( cd src ; make -i -r plot_level.exe )
+     if ( -e src/plot_level.exe ) then
+             ln -sf src/plot_level.exe .
+     endif
+( cd src ; make -i -r plot_soundings.exe )
+     if ( -e src/plot_soundings.exe ) then
+             ln -sf src/plot_soundings.exe .
+     endif
+endif
+
+
+if ( $temp_netcdf == 1 ) then
+	unsetenv NETCDF
+endif
+
+exit(0)

@@ -1,0 +1,178 @@
+ 
+**** Compiling oa ****
+ 
+/bin/rm -f map_utils_module.o map_utils_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  map_utils_module.F90 > map_utils_module.f
+ifort -FR -convert big_endian -c map_utils_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f map_utils_module.f
+/bin/rm -f map_utils_helper_module.o map_utils_helper_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  map_utils_helper_module.F90 > map_utils_helper_module.f
+ifort -FR -convert big_endian -c map_utils_helper_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f map_utils_helper_module.f
+/bin/rm -f date_pack_module.o date_pack_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  date_pack_module.F90 > date_pack_module.f
+ifort -FR -convert big_endian -c date_pack_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f date_pack_module.f
+/bin/rm -f small_header_data_module.o small_header_data_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  small_header_data_module.F90 > small_header_data_module.f
+ifort -FR -convert big_endian -c small_header_data_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f small_header_data_module.f
+/bin/rm -f input_data_module.o input_data_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  input_data_module.F90 > input_data_module.f
+ifort -FR -convert big_endian -c input_data_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f input_data_module.f
+/bin/rm -f namelist_module.o namelist_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  namelist_module.F90 > namelist_module.f
+ifort -FR -convert big_endian -c namelist_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f namelist_module.f
+/bin/rm -f get_fg_at_point_module.o get_fg_at_point_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  get_fg_at_point_module.F90 > get_fg_at_point_module.f
+ifort -FR -convert big_endian -c get_fg_at_point_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f get_fg_at_point_module.f
+/bin/rm -f obs_sort_module.o obs_sort_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  obs_sort_module.F90 > obs_sort_module.f
+ifort -FR -convert big_endian -c obs_sort_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f obs_sort_module.f
+/bin/rm -f tinterp_module.o tinterp_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  tinterp_module.F90 > tinterp_module.f
+ifort -FR -convert big_endian -c tinterp_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f tinterp_module.f
+/bin/rm -f driver.o driver.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  driver.F90 > driver.f
+ifort -FR -convert big_endian -c driver.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f driver.f
+/bin/rm -f error_module.o error_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  error_module.F90 > error_module.f
+ifort -FR -convert big_endian -c error_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f error_module.f
+/bin/rm -f error_handler.o error_handler.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  error_handler.F90 > error_handler.f
+ifort -FR -convert big_endian -c error_handler.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f error_handler.f
+/bin/rm -f linpak.o linpak.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  linpak.F90 > linpak.f
+ifort -FR -convert big_endian -c linpak.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f linpak.f
+/bin/rm -f main.o main.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  main.F90 > main.f
+ifort -FR -convert big_endian -c main.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f main.f
+/bin/rm -f oa_module.o oa_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  oa_module.F90 > oa_module.f
+ifort -FR -convert big_endian -c oa_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f oa_module.f
+/bin/rm -f first_guess_module.o first_guess_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  first_guess_module.F90 > first_guess_module.f
+ifort -FR -convert big_endian -c first_guess_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f first_guess_module.f
+/bin/rm -f final_analysis_module.o final_analysis_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  final_analysis_module.F90 > final_analysis_module.f
+ifort -FR -convert big_endian -c final_analysis_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f final_analysis_module.f
+/bin/rm -f proc_final_analysis.o proc_final_analysis.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_final_analysis.F90 > proc_final_analysis.f
+ifort -FR -convert big_endian -c proc_final_analysis.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_final_analysis.f
+/bin/rm -f proc_first_guess.o proc_first_guess.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_first_guess.F90 > proc_first_guess.f
+ifort -FR -convert big_endian -c proc_first_guess.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_first_guess.f
+/bin/rm -f proc_get_info_header.o proc_get_info_header.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_get_info_header.F90 > proc_get_info_header.f
+ifort -FR -convert big_endian -c proc_get_info_header.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_get_info_header.f
+/bin/rm -f proc_header.o proc_header.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_header.F90 > proc_header.f
+ifort -FR -convert big_endian -c proc_header.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_header.f
+/bin/rm -f proc_namelist.o proc_namelist.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_namelist.F90 > proc_namelist.f
+ifort -FR -convert big_endian -c proc_namelist.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_namelist.f
+/bin/rm -f proc_oa.o proc_oa.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_oa.F90 > proc_oa.f
+ifort -FR -convert big_endian -c proc_oa.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_oa.f
+/bin/rm -f ob_access_module.o ob_access_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  ob_access_module.F90 > ob_access_module.f
+ifort -FR -convert big_endian -c ob_access_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f ob_access_module.f
+/bin/rm -f proc_ob_access.o proc_ob_access.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_ob_access.F90 > proc_ob_access.f
+ifort -FR -convert big_endian -c proc_ob_access.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_ob_access.f
+/bin/rm -f proc_obs_sort.o proc_obs_sort.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_obs_sort.F90 > proc_obs_sort.f
+ifort -FR -convert big_endian -c proc_obs_sort.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_obs_sort.f
+/bin/rm -f qc0_module.o qc0_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  qc0_module.F90 > qc0_module.f
+ifort -FR -convert big_endian -c qc0_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f qc0_module.f
+/bin/rm -f qc1_module.o qc1_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  qc1_module.F90 > qc1_module.f
+ifort -FR -convert big_endian -c qc1_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f qc1_module.f
+/bin/rm -f qc2_module.o qc2_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  qc2_module.F90 > qc2_module.f
+ifort -FR -convert big_endian -c qc2_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f qc2_module.f
+/bin/rm -f qc3_module.o qc3_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  qc3_module.F90 > qc3_module.f
+ifort -FR -convert big_endian -c qc3_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f qc3_module.f
+/bin/rm -f proc_qc.o proc_qc.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  proc_qc.F90 > proc_qc.f
+ifort -FR -convert big_endian -c proc_qc.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f proc_qc.f
+/bin/rm -f printout_module.o printout_module.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  printout_module.F90 > printout_module.f
+ifort -FR -convert big_endian -c printout_module.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f printout_module.f
+/bin/rm -f sample.o sample.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  sample.F90 > sample.f
+ifort -FR -convert big_endian -c sample.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f sample.f
+/bin/rm -f yx2xy.o yx2xy.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  yx2xy.F90 > yx2xy.f
+ifort -FR -convert big_endian -c yx2xy.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f yx2xy.f
+ifort -o obsgrid.exe  driver.o error_handler.o linpak.o main.o proc_final_analysis.o proc_first_guess.o proc_get_info_header.o proc_header.o proc_namelist.o proc_oa.o proc_ob_access.o proc_obs_sort.o proc_qc.o sample.o yx2xy.o date_pack_module.o error_module.o final_analysis_module.o first_guess_module.o input_data_module.o map_utils_module.o map_utils_helper_module.o namelist_module.o oa_module.o ob_access_module.o obs_sort_module.o printout_module.o qc0_module.o qc1_module.o qc2_module.o qc3_module.o small_header_data_module.o tinterp_module.o get_fg_at_point_module.o -L/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/lib -lnetcdf -lnetcdff -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include 
+/bin/rm -f module_header.o module_header.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_header.F90 > module_header.f
+ifort -FR -convert big_endian -c module_header.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_header.f
+/bin/rm -f module_map_stuff.o module_map_stuff.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_map_stuff.F90 > module_map_stuff.f
+ifort -FR -convert big_endian -c module_map_stuff.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_map_stuff.f
+/bin/rm -f module_ncarg.o module_ncarg.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_ncarg.F90 > module_ncarg.f
+ifort -FR -convert big_endian -c module_ncarg.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_ncarg.f
+/bin/rm -f module_read_station.o module_read_station.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_read_station.F90 > module_read_station.f
+ifort -FR -convert big_endian -c module_read_station.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_read_station.f
+/bin/rm -f plot_level.o plot_level.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  plot_level.F90 > plot_level.f
+ifort -FR -convert big_endian -c plot_level.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f plot_level.f
+ifort -o plot_level.exe   plot_level.o module_header.o module_map_stuff.o module_ncarg.o module_read_station.o date_pack_module.o -L/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lm -lcairo -L/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/lib -lnetcdf -lnetcdff -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include 
+/bin/rm -f module_mapinfo.o module_mapinfo.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_mapinfo.F90 > module_mapinfo.f
+ifort -FR -convert big_endian -c module_mapinfo.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_mapinfo.f
+/bin/rm -f module_report.o module_report.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_report.F90 > module_report.f
+ifort -FR -convert big_endian -c module_report.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_report.f
+/bin/rm -f module_skewt.o module_skewt.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  module_skewt.F90 > module_skewt.f
+ifort -FR -convert big_endian -c module_skewt.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f module_skewt.f
+/bin/rm -f plot_soundings.o plot_soundings.mod
+/lib/cpp  -I. -C -P -DDEC -traditional  plot_soundings.F90 > plot_soundings.f
+ifort -FR -convert big_endian -c plot_soundings.f -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include
+/bin/rm -f plot_soundings.f
+ifort -o plot_soundings.exe   plot_soundings.o module_mapinfo.o module_report.o module_skewt.o date_pack_module.o -L/lib -lncarg -lncarg_gks -lncarg_c -lX11 -lm -lcairo -L/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/lib -lnetcdf -lnetcdff -I/glade/apps/opt/netcdf/4.3.0/intel/12.1.5/include 

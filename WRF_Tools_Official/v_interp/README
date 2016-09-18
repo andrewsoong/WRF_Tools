@@ -1,0 +1,46 @@
+
+Program v_interp.f
+
+Another bug fix: (9/4/09)
+
+- Another bug is fixed regarding bdy file interpolation. Thanks to 
+Jason Evans of University of New South Wales, Australia.
+
+Major bug fix: (5/28/09)
+
+- A bug in interpolating boundary file has been discovered and fixed by Steven Decker
+  of Rutgers University. It is now incorporated into the code.
+
+------------
+
+This program may be used to increase number of model vertical levels after wrfinput
+and wrfbdy files are obtained. An example for using this program would be after
+running program ndown, which horizontally interpolates model data to a finer grid.  
+
+This program reads either wrfinput or wrfbdy files and creates a new
+wrfinput and wrfbdy files that have more vertical levels. The number
+of new vertical levels (nvert), and the new, full, model levels (nlevels) are 
+specified in the namelist.v_interp file. 
+
+A word of caution for adding the new levels: it is the best to add the new full levels
+in between the second, and second last full levels in the original set. The program
+is not tested for doing any type of extrapolation.
+
+
+Several compile options are listed near the top of the program v_interp.f.
+It requires netcdf library and include file to compile. To run the program, type
+
+./v_interp wrfinput_d01 wrfinput_d01_new
+
+or 
+
+./v_interp wrfbdy_d01 wrfbdy_d01_new
+
+Note that when working with wrfbdy file, the program will key on the name
+of the file 'wrfbdy'. So please use wrfbdy file name as it is.
+Please also keep the companion wrfinput_d0* file in the same directory,
+since the old eta levels need to come from the wrfinput_d0* file.
+(Thanks to Steven Decker of Rutgers University for the fix.)
+
+
+If you have any question or feedback, please write to wrfhelp@ucar.edu.

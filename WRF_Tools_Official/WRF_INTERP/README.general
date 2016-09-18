@@ -1,0 +1,434 @@
+Information on the wrf_interp code.
+
+This program takes WRF-ARW output files and interpolates the 4D variables to user requested levels.
+It also calculates Relative Humidity, Temperature(K), Geopotential Height (Meters) and Potential
+Vorticity on the user requested interpolation levels. The 2D variables in the original wrfout file
+are written out unmodified. 
+
+If the program is successful then a NETCDF format file with the "_INTRP" suffix is produced in the 
+users output directory.  For example wrfout_d01_1991-01-01_00:00:00_INTRP will be produced after 
+interpolation of the wrfout_d01_1991-01-01_00:00:00 file.
+
+
+This code makes extensive use of RIP's interpolation and extrapolation code.  It also contains
+subroutines that were taken directly from RIP without any modifications.
+RIP stands for Read/Interpolate/Plot.  RIP was originally written by  Dr. Mark Stoelinga.
+The original wrf_interp.F90 code was written by Dr. Cindy Bruyere (NCAR,MMM).
+The present code was modified from the original by  Sherrie Fredrick (NCAR,MMM) and 
+Dr. Cindy Bruyere (NCAR,MMM).
+
+-----------------------------------------------------------------------------------------------
+To compile on yellowstone.ucar.edu with the ifort compiler type
+If you have the intel module loaded on Yellowstone then type
+ifort -o wrf_interp.exe -traceback -fpe0 -check all -ftrapuv -unroll0 -u -fp-stack-check -fpe-all=0 -no-ftz -O0 wrf_interp.F90
+
+or 
+pgf90 for the pgi module
+
+On Yellowstone the Netcdf libraries are automatically included in the modules.
+This will produced an executable that can be run on yellowstone by typing
+./wrf_interp.exe
+
+ 
+To compile on an MMM Lynux machine using the PGI compilers type
+  setenv NETCDF /usr/local/netcdf-3.5.0-pgi
+  setenv NCARG_ROOT /usr/local/ncarg-4.4.2-pgi-64
+  setenv PGI /usr/local/pgi
+  set path = ( $PGI/bin $path )
+  setenv LD_LIBRARY_PATH /usr/lib:/usr/local/lib:/usr/local/pgi/lib
+  setenv LM_LICENSE_FILE 7496@licenseb.ucar.edu:7496@licensea.ucar.edu
+
+pgf90 wrf_interp.F90 -L/usr/local/netcdf-3.6.3-pgi/lib  -lnetcdf -lm  -I/usr/local/netcdf/include  -Mfree -o wrf_interp.exe
+This will produce an executable that can be run by typing ./wrf_interp.exe
+
+It is important to note that if you are compiling on a machine other than the 
+NCAR Yellowstone machine you will need to compile with the Netcdf libraries.
+
+
+-----------------------------------------------------------------------------------------------
+namelist.vinterp file
+Namelist entries:
+
+The input to the program is a file called namelist.vinterp.
+The following describes the contents of the namelist.vinterp file.
+
+&io
+ path_to_input = 'your directory'
+ path_to_output = 'output directory/'
+ root_name = 'wrfout'
+ grid_id = 1
+ start_date =  '199101'
+ leap_year  = .TRUE.
+ debug = .FALSE.
+/
+
+The path_to_input needs to be the directory name where your wrfout files reside.
+The path_to_output is where you want the interpolated output files to reside.
+IMPORTANT NOTE:
+    It is best to have your input directory and your output directory be different
+    directories.  If you try to interpolate an already interpolated file you will
+    get an error.  The program can not distinguish between a wrfout file and an
+    interpolated wrfout file.
+
+
+The root_name is either 'wrfout' The program CAN NOT interpolate 
+    metgrid files.
+The grid_id is the id of the nest for example if you have wrfout_d02 files then
+    the grid id = 2.
+
+The start date can be specified as follows:
+     start_date = ' '           all the files in the input directory
+     start_date = '1991'        all the files for the year 1991 in the input directory
+     start_date = '199101'      all the files for January 1991 in the input directory
+     start_date = '19910103'    all the files for January 3 1991 in the input directory
+     start_date = '1991010310'  all the files for January 3 1991 for hour 10 in 
+                                the input directory
+
+leap_year = .TRUE.  if you have leap years in your simulation
+          = .FALSE. if you do not have leap years in your simulation
+
+
+debug = .FALSE. if you do not want debugging statements printed while the 
+                program is running.
+
+debug = .TRUE. if you do want debugging statements printed while the 
+               program is running
+
+----------------------------------------------------------------------------------------
+&interp_in
+interp_levels = 1000.,987.5,975.,962.5,950.,937.5,925.,
+                 900.,875.,850.,825.,800.,750.,700.,650.,
+                 600.,550.,500.,450.,400.,350.,300.,250.,
+                 225.,200.,175.,150.,137.5,125.,112.5,100.,
+                 87.5,75.,62.5,50.,37.5,25.,12.5
+  extrapolate = 1
+  interp_method = 1
+  unstagger_grid = .FALSE.
+/
+
+
+The vertical levels and units that the program can interpolate to are as follows:
+
+vert_coordinate = 
+         level type                          namelist entry          expected units
+         pressure                            pressure, pres            hPa
+         log of pressure                     log_pres                  hPa 
+         grid point height msl               ght_msl                   km
+         grid point height agl               ght_agl                   km
+         potential temperature               theta                     K
+         equivalent potential temperature    theat-e                   K
+
+         
+Interpolation levels
+
+The following are acceptable values for interpolation levels
+
+A long list of values such as: 
+Pressure example
+interp_levels = 1000.,987.5,975.,962.5,950.,937.5,925.,
+                 900.,875.,850.,825.,800.,750.,700.,650.,
+                 600.,550.,500.,450.,400.,350.,300.,250.,
+                 225.,200.,175.,150.,137.5,125.,112.5,100.,
+                 87.5,75.,62.5,50.,37.5,25.,12.5
+    
+
+Geopotential height example units km
+interp_levels = 0.111, 1.457, 5.574, 16.18, 20.576, 31
+
+
+Potential Temperature or Equivalent Potential Temperature units degrees K
+interp_levels = 290,330,360
+
+
+Interpolation can also be specified as a group of 3 where: 
+    the first entry indicates the start point,
+    the second entry indicates the end point, and 
+    the third entry indicates the increment.
+This grouping specification as also be used in conjunction with the list method as 
+seen in the examples below.
+
+interp_levels = 1000.,950,825.,700.-100,100
+                This list will interpolate to levels 1000,950 and 825.  Then starting
+                with 700 it will go down to 100 by an increment of 100.  
+                So the interpolation levels will be: 
+                   1000,800,700,600,500,400,300,200,100.
+                When the program sees a '-' sign in the interp_level namelist
+                entry it will take the value immediately before the '-' as 
+                the beginning value for a series of values.  The number that is
+                with the '-' is the ending value in the series and the 
+                number after the '-' will be the increment. 
+                examples
+                300,-50,50 -> 300,250,200,150,100,50
+                50,-300,50 -> 50,100,150,200,250,300
+
+
+extrapolate = .TRUE.  If you want the 4D variables to be extrapolated below ground then
+                      set this value to .TRUE.  The default is .FALSE.  For the temperature
+                      field on either pressure of height (msl) a standard lapse rate 
+                      temperature profile at the model level is used to get the temperature
+                      profile below ground.
+
+extrapolate = .FALSE.  When the level is below ground the MISSING value of 
+                       MISSING=1.e36 is put in the field.
+
+
+unstagger_grid = .FALSE.  If this is set to .FALSE. then the U and V winds will not 
+                          be destaggered.  They will be output on the staggered grid.
+  
+unstagger_grid = .TRUE.   U and V winds will be destaggered to the mass points.
+
+IMPORTANT NOTES           Geopotential Height as well and vertical velocity are destaggered
+                          in the vertical and put on mass points before interpolation is
+                          done.  So the output of Geopotential height and W vertical velocity
+                          is always on the mass points.
+
+                          You will need at least two interpolation levels.  
+
+-------------------------------------------------------------------------------------
+The interpolated netCDF file is described as follows:
+
+   Dimension variables: 
+        Time  = UNLIMITED ; // (ntimes)
+        lev   =                  number of pressure surfaces requested 
+        DateStrLen  = 19         always 19
+        west_east   =            ew grid dimensions
+        south_north =            ns grid dimensions
+        soil_layers_stag =       number of soil layers
+
+Extra dimension variables depending on wether or not the winds have 
+been desgaggered or left on the staggered grid.
+  
+        west_east_stag   =       ew velocity staggered grid dimension
+        south_north_stag =       ns velocity staggered grid dimension
+If the winds were destaggered during the interpolation process these
+dimensions will not be in the file.
+
+
+--------------------------------------------------------------------
+   Variables 
+
+        double time(time)    always the first variable.   
+                             this variable will have the
+                             following attributes
+
+                time:description = "Hours since 1901-01-01 00:00:00" 
+                time:units = "Hours since 1901-01-01 00:00:00" 
+                time:standard_name = "time" ;
+                time:_FillValue = 9.96920996838687e+36 
+                time:calendar = "standard" 
+                or
+                time:calendar = "noleap"
+      
+
+        char Times(time, DateStrLen)  always the second variable with 
+                                      the following attributes.
+                Times:description = "YYYY-MM-DD_hh:mm:ss" 
+                Times:_FillValue = " " ;
+
+
+        float LEV(lev)               always the third variable with 
+                                     the following attributes.
+                For Pressure
+                LEV:description = "Pressure Levels" ;
+                LEV:units = "mb" ;
+                This variable contains the values of the pressure levels
+                requested by the user.
+              
+                For Height
+                LEV:description = "Height Levels msl" ;
+                LEV:units = "km " ;
+
+                or
+                LEV:description = "Height Levels agl" ;
+                LEV:units = "km " ;
+
+
+                For potential temperature's
+                LEV:description = "Potential Temperature Levels" ;
+                LEV:units = "K" ;
+
+                or 
+                LEV:description = "Equivalent Potential Temperature Levels" ;
+                LEV:units = "K" ;
+
+   Variables 4 ---- nvariables
+        
+         The variables dimensioned (time,lev,gridns,gridew) are 
+         interpolated to the vertical surfaces requested by the user.
+         The vertical velocity W is destaggered in the vertical.
+         The Geopotential Height is also destaggered in the vertical.
+         All 4D variables are flipped in the vertical.  This allows for the 
+         use of RIP's routines.  The east-west and north-south grid dimensions
+         remain unchanged.  The variables remain on the WRF east-west north-south 
+         and grid definition. 
+         
+         U(ew velocity), V(ns velocity) are destaggered if requested
+         by the user.
+
+         Surface variables dimensioned (time,gridns,gridew) are 
+         written directly from the WRF output file to the 
+         netCDF file with no changes.
+  
+         
+----------------------------------------------------------------------------------------------
+
+Calculated variable information.
+
+
+GHT Variable -  If extrapolation is turned on in the namelist.vinterp file then the 
+                geopotential height will be extrapolated using the vinterp.f code from
+                RIP.  
+                General Algorithm: 
+                1.  The PHB and PH variables are read in from the WRF-ARW input file
+                2.  Both the PHB and PH variables are put on RIP's grid. Code taken
+                    directly from ripdp_wrfarw.f.
+                3.  The PHB and PH variables are added together and then converted to
+                    (GHT)geopotential height by dividing by 9.81
+                4.  The GHT is interpolated to mass levels using the eta values on
+                    half mass levels(ZNU) and eta values on full (w) levels (ZNW)
+                    variable.
+                    Code taken directly from ripdp_wrfarw.f.
+                4.  The surface pressure is passed through the smoothing routine taken directly
+                    from RIP's smoothing routine.  This smoothed version of the surface
+                    pressure is used when interpolating the GHT below the ground.
+                5.  The GHT is interpolated using RIP's vinter.f code with very little
+                    modification.
+                units for the GHT variable are m2/sec2
+
+
+Temperature Variable - If extrapolation is turned on in the namelist.vinterp file then the 
+                       temperature will be extrapolated using the vinterp.f code from
+                       RIP.  
+                General Algorithm:    
+                1.   The variable TT is read in from the WRF_ARW file.
+                2.   The TT variable is placed on the RIP grid using code
+                     taken directly from ripdp_wrfarw.f.
+                3.   The interpolation is done using RIP's vinterp.f code with very little
+                     modification.  RIP's code uses a standard lapse rate temperature profile
+                     passing through the temperature at the model levels to define the 
+                     temperature profile below ground. 
+
+RH     - If extrapolation is turned on in the namelist.vinterp file then the 
+         relative humidity  will be extrapolated using the vinterp.f code from RIP.  
+                General Algorithm:    
+                1.   RH is calculated.
+                2.   RH is put on RIP's grid using code from ripdp_wrfarw.f
+                3.   RH is interpolated using RIP's vinterp.f routine.        
+
+PVO- potential vorticity
+               General Algorithm:  
+               1. Calculate potential vorticity.
+               2. Put potential vorticity on the RIP grid.
+               3. Interpolate PVO using RIP's vinterp.f routine.
+
+
+
+-----------------------------------------------------------------------------------------------------
+
+Brief description of subroutines
+
+   Subroutines called from the main program.
+
+   read_namelist      -  Parameters are read in from the namelist.vinterp
+                         The file names are created from the input directory, the root name,
+                         grid, and start_date.  A file called .foo is created in the directory
+                         where you are running the program.  This file contains the file names of all
+                         the files in the input directory which match the root name.  If there are no
+                         files in the directory that match then an error is printed to the screen and 
+                         the program exits.
+
+   
+  basic_fileinfo      -  Reads in dimension information from the input files.
+
+
+  outfile_attributes  -  Sets the output file attributes
+
+
+  def_outfile_dims    -  Set the output file dimensions
+
+
+  def_time_level_vars -  Defines the time and level variables.  
+                         time  - contains the hours since  1901-01-01 00:00:00
+                         Times - contains the character description of the times in the file.
+                                 YYYY-MM-DD_hh:mm:ss
+
+                         LEV   - defines the vertical coordinate as described above.
+                        
+                         Calls integer function wrf_times_2Ud  
+                         wrf_times_2Ud - calculates the hours since 1901-01-01 00:00:00 for time.            
+
+
+  
+  getpres             -  Reads in pressure from the WRF input file.
+  getterrain          -  Reads in terrain from the WRF input file.
+  calcght             -  Calculates geopotential height using code from ripdp_wrfarw.f
+                         Geopotential height is destaggered.  The  geopotential height is
+                         also flipped in the vertical.
+
+  calctk              -  Temperature in degrees K is calculated from the 
+                         WRF output perturbation potential temperature (wrfpt) and 
+                         temperature.
+                         tk  = (wrfpt+300.) * (pressure/1000.)**rcp
+                         rd     = 287.04
+                         cp     =  1004.0
+                         rcp    = rd/cp
+                         tk is flipped in the vertical.
+
+  calcrh             -   Relative humidity is calculated from the WRF output fields.
+
+
+  calcsfp            -   Surface pressure is calculated ONLY if extrapolation below the 
+                         ground has been requested.  This code was taken from ripdp_wrfarw.f.
+                         Calls subroutine smooth. 
+                         smooth - This subroutine smooth the surface pressure
+                                  for use in extrapolation of temperature below the ground.  The subroutine
+                                  smooth was taken directly from RIP's code and was not modified.
+                         
+
+
+  special_interp     -   Interpolates the 4 dimensional variables to the requested vertical surfaces.
+                         This code is basically RIP's vinter.f code with modification.
+                         Calls vcord_array 
+                         vcord_array - This subroutine calculates the vertical coordinate array
+                                       used in the vertical interpolation.  
+                                       Calls monotonic
+                                             monotonic - This subroutine was taken directly from RIP's code with 
+                                             no modifications. It is called when the user has requested 
+                                             either a potential temperature or equivalent potential 
+                                             temperature vertical coordinate.  
+                         
+                         Calls intrp_value 
+                               intrp_value - returns the interpolated value
+
+                         Calls special_extrapolation 
+                               special_extrapolation - This code was taken from RIP's vinter.f subroutine.
+                                                       It extrapolates fields below the ground if the 
+                                                       user has requested either pressure or height vertical
+                                                       levels. 
+
+  calcpvo           -    Potential vorticity is calculated using the code from wrf_pvo.f without modification.
+--------------------------------------------------------------------------------------------------------------
+General program flow
+
+
+       Read namelist.vinterp
+       Setup output file dimensions
+       
+       Loop over files
+            Loop over fields in the file
+                 interpolate 4d fields and write to output file
+                 write 2d fields directly to output file without modification
+            end loop over fields
+
+            write Pressure field to file if not on pressure surfaces.
+            write Temperature field to output file after interpolation.
+            write Relative humidity field to output file after interpolation.
+            calculate and write potential vorticity field to file after interpolation.
+            close current output file
+
+      end loop over files 
+
+         
+
+
+                               
