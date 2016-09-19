@@ -1,0 +1,299 @@
+#
+# wrf_hydro_forcing_param
+#
+
+# This is a Python config file used by the WRF-Hydro_forcing.py script. 
+# WRF-Hydro_forcing.py is the forcing engine that is comprised of  
+# 1) a Python trigger to monitor when data and processed files are available (and
+# determine when to perform further processing), and
+# 2) a Python wrapper to the various regridding and
+# processing scripts written in NCL. The config file is employed to avoid 
+# hard-coding input parameters and directory paths in any scripts. 
+
+
+#--------------------------------------------------
+# Logging levels
+#--------------------------------------------------
+
+[log_level]
+# Select one of the following logging levels to determine
+# the "verbosity" of logging.  DEBUG will be the most verbose
+# but unnecessary in a production environment.
+# forcing script logging levels are :
+#   DEBUG - detailed, useful for diagnosing problems
+#   INFO  - confirmation that things are working
+#   WARNING - something unexpected occurred or harbinger of something.
+#            code is still working as expected.
+#   ERROR - more serious problem, code cannot perform its task
+#   CRITICAL -  serious error, the code may not be able to continue running
+forcing_engine_log_level= DEBUG
+forcing_engine_log_dir= /d7/dave/forcing_engine/log
+
+
+#--------------------------------------------------
+# Default environment variables
+#-------------------------------------------------
+
+[default_env_vars]
+# Feb,3, 2016, per Tor's instructions:
+# Don't forget to put /opt/ncl-gcc-6.3.0/bin in your path
+ncarg_root = /opt/ncl-gcc-6.3.0
+
+# Set the NCL_DEF_LIB_DIR environment variable where all the
+# shared objects reside, used with WRAPIT to call a Fortran
+# function within a shared object.  This is the alternate 
+# method to loading the shared object without hard-coding
+# its location in the NCL script.  For more information,
+# refer to: 
+# https://www.ncl.ucar.edu/Document/Tools/WRAPIT.shtml
+#
+
+ncl_def_lib_dir = /d8/hydro-dm/IOC/forcing_engine/shared_objs
+
+#-------------------------------------------------
+#   Data Directories
+#-------------------------------------------------
+
+[data_dir]
+# This section contains the directory paths for the static data
+# NOTE: This will be replaced with real-time data for Operational
+# use.  The static data is used for initial development and testing purposes.
+
+HRRR_data = /d7/dave/data/playback/HRRR
+MRMS_data = /d7/dave/data/playback/MRMS
+RAP_data =  /d7/dave/data/playback/RAP
+GFS_data =  /d7/dave/data/playback/GFS
+CFS_data =  /d7/dave/data/playback/CFS
+CFS_num_ensemble = 4
+MRMS_format = GaugeCorr_QPE_00.00_%%s_%%02d0000.grib2
+RAP_format = %%s_i%%02d_f%%03d_WRF-RR.grb2
+HRRR_format = %%s_i%%02d_f%%03d_HRRR.grb2
+GFS_format = %%s_i%%02d_f%%04d_GFS_0.25_pgrb2.grb2
+
+#-------------------------------------------------
+#   Playback source data Directories
+#-------------------------------------------------
+
+[source_data_dir]
+# This section contains the directory paths for the data that can be played back into
+# the corresponding [data_dir] location.
+
+HRRR_data = /d7/dave/data/archive/HRRR
+MRMS_data = /d7/dave/data/archive/MRMS
+RAP_data = /d7/dave/data/archive/RAP
+GFS_data = /d7/dave/data/archive/GFS
+CFS_data = /d7/dave/data/archive/CFS
+CFS_num_ensemble = 4
+
+#-------------------------------------------------
+#   Forecast hour cutoff times
+#-------------------------------------------------
+
+[fcsthr_max]
+# Last forecast hour for the specified 
+# input model data (HRRR, RAP, etc.) to be included in the forcing
+RAP_fcsthr_max = 23
+HRRR_fcsthr_max = 23
+GFS_fcsthr_max = 240
+CFS_fcsthr_max = 726
+MRMS_fcsthr_max = 0 
+
+#-------------------------------------------------
+#  Triggering look back limits
+#-------------------------------------------------
+[triggering]
+#
+# Number of hours back from current issue time to keep state
+#
+HRRR_hours_back = 3 
+RAP_hours_back = 3 
+GFS_hours_back = 12 
+CFS_hours_back = 24 
+MRMS_hours_back = 5 
+
+short_range_fcst_max_wait_minutes = 0
+short_range_fcst_very_late_minutes = 0
+analysis_assim_very_late_minutes = 50
+
+#
+# State files for regrid triggering
+#
+hrrr_regrid_state_file =       ./State.HrrrRegrid.txt
+rap_regrid_state_file =        ./State.RapRegrid.txt
+mrms_regrid_state_file =       ./State.MrmsRegrid.txt
+gfs_regrid_state_file =        ./State.GfsRegrid.txt
+cfs_regrid_state_file =        ./State.CfsRegrid.txt
+long_range_regrid_state_file = ./State.LongRangeRegrid.txt
+
+#
+# State file for short range layering
+#
+short_range_layering_state_file = ./State.ShortRangeLayering.txt
+analysis_assim_layering_state_file = ./State.AnalysisAssimLayering.txt
+
+
+
+#-------------------------------------------------
+#    Paths to executables and other scripts
+#-------------------------------------------------
+
+[exe]
+# ESMF, NCL
+esmf_exe=/usr/local/esmf
+# Use version 6.3.0 for latest grib tables
+# in hydro-c1; use the version built without 
+# linking to GDAL
+ncl_exe = /opt/ncl-gcc-6.3.0/bin/ncl
+
+# Bias correction
+CFS_bias_correct_mod = /d8/hydro-dm/IOC/forcing_engine/NCL/CFSv2_bias_correct_mod.ncl
+CFS_bias_correct_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/CFSv2_bias_correct.ncl
+
+# Regridding
+HRRR_regridding_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/HRRR-2-WRF_Hydro_ESMF_regrid.ncl
+HRRR_regridding_exe_0hr = /d8/hydro-dm/IOC/forcing_engine/NCL/HRRR-2-WRF_Hydro_ESMF_regrid_0hr.ncl
+MRMS_regridding_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/MRMS-2-WRF_Hydro_ESMF_regrid.ncl
+GFS_regridding_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/GFS2Hydro_forcing_ESMFregrid.ncl
+RAP_regridding_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/RAP-2-WRF_Hydro_ESMF_regrid.ncl
+RAP_regridding_exe_0hr = /d8/hydro-dm/IOC/forcing_engine/NCL/RAP-2-WRF_Hydro_ESMF_regrid_0hr.ncl
+CFS_regridding_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/CFSv2_regrid_conus.ncl
+
+# Downscaling
+# Use the same downscaling script for all products. The hgt file, geo file, and
+# input file (data to downscale) are the only input and these are all defined in # this config file.
+HRRR_downscaling_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/All_WRF_Hydro_downscale.ncl
+HRRR_downscaling_exe_0hr = /d8/hydro-dm/IOC/forcing_engine/NCL/All_WRF_Hydro_downscale_0hr.ncl
+GFS_downscaling_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/All_WRF_Hydro_downscale.ncl
+RAP_downscaling_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/All_WRF_Hydro_downscale.ncl
+RAP_downscaling_exe_0hr = /d8/hydro-dm/IOC/forcing_engine/NCL/All_WRF_Hydro_downscale_0hr.ncl
+CFS_downscaling_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/CFSv2_downscale_conus.ncl 
+
+topo_adj_fortran_exe = /d8/hydro-dm/IOC/forcing_engine/shared_objs/topo_adjf90.so
+shortwave_downscaling_exe = /d8/hydro-dm/IOC/forcing_engine/NCL/topo_adj.ncl
+
+# Layering and contingency
+Analysis_Assimilation_layering = /d8/hydro-dm/IOC/forcing_engine/NCL/layer_anal_assim.ncl
+Short_Range_layering = /d8/hydro-dm/IOC/forcing_engine/NCL/combine.ncl
+
+#-------------------------------------------------
+#    Parameters needed to run bias correction
+#-------------------------------------------------
+
+[bias_correction]
+
+#CFSv2-specific
+CFS_correspond = /d8/hydro-dm/IOC/forcing_engine/weighting_files/bias_correction/nldas_param_cfsv2_subset_grid_correspondence.nc
+CFS_tmp_dir = /d7/dave/data/output/bias_correction/CFSv2_tmp
+CFS_bias_parm_dir = /d8/hydro-dm/IOC/forcing_engine/weighting_files/bias_correction/cfs_climo
+NLDAS_bias_parm_dir = /d8/hydro-dm/IOC/forcing_engine/weighting_files/bias_correction/nldas_climo
+
+#-------------------------------------------------
+#    Parameters needed to run regridding scripts
+#-------------------------------------------------
+
+[regridding]
+
+#HRRR-specific
+HRRR_wgt_bilinear  = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/HRRR2HYDRO_d01_weight_bilinear.nc
+HRRR_dst_grid_name = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc
+HRRR_output_dir = /d7/dave/data/output/regridded/HRRR 
+HRRR_output_dir_0hr = /d7/dave/data/output/regridded/HRRR_0hr 
+
+#MRMS-specific
+MRMS_wgt_bilinear =  /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/RADAR2HYDRO_d01_weight_bilinear.nc
+MRMS_dst_grid_name = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc
+MRMS_output_dir = /d7/dave/data/output/regridded/MRMS 
+MRMS_finished_output_dir = /d7/dave/data/output/downscaled/MRMS/final 
+
+#GFS-specific
+#For GFS_0.25 data
+GFS_wgt_bilinear = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/GFS2HYDRO_d01_weight_bilinear.nc
+GFS_dst_grid_name = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+GFS_output_dir = /d7/dave/data/output/regridded/GFS 
+
+#RAP-specific
+RAP_wgt_bilinear = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/RAP2HYDRO_d01_weight_bilinear.nc
+RAP_dst_grid_name = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+RAP_output_dir = /d7/dave/data/output/regridded/RAP 
+RAP_output_dir_0hr = /d7/dave/data/output/regridded/RAP_0hr 
+
+#CFSv2-specific
+CFS_wgt_bilinear = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/CFS2HYDRO_d01_weight_bilinear.nc
+CFS_dst_grid_name = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+
+#-------------------------------------------------
+#    Parameters needed to run downscaling scripts
+#
+#    NOTE:  MRMS does NOT require downscaling
+#-------------------------------------------------
+
+[downscaling]
+
+# Common to all products for downscaling
+lapse_rate_file = /d8/hydro-dm/IOC/forcing_engine/weighting_files/downscaling/NARRlapse1km.nc
+
+
+# HRRR
+# Currently, this is NAM227, as required by NCEP
+# Directory where regridded HRRR data to BE DOWNSCALED is located
+HRRR_data_to_downscale = /d7/dave/data/output/regridded/HRRR
+HRRR_hgt_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/downscaling/HRRRhgt.nc
+HRRR_geo_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+# Directory where downscaled data should be saved
+HRRR_downscale_output_dir = /d7/dave/data/output/downscaled/HRRR/staging 
+HRRR_downscale_output_dir_0hr = /d7/dave/data/output/downscaled/HRRR_0hr/staging 
+HRRR_finished_output_dir = /d7/dave/data/output/downscaled/HRRR/final
+HRRR_finished_output_dir_0hr = /d7/dave/data/output/downscaled/HRRR_0hr/final
+
+# GFS 
+# Currently GFS 0.25 degree data
+# Directory where regridded GFS data to BE DOWNSCALED is located
+GFS_data_to_downscale = /d7/dave/data/output/regridded/GFS  
+GFS_hgt_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/downscaling/GFShgt.nc
+GFS_geo_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+# Directory where downscaled data should be saved
+GFS_downscale_output_dir = /d7/dave/data/output/downscaled/GFS/staging 
+GFS_finished_output_dir = /d7/dave/data/output/downscaled/GFS/final
+
+
+# RAP
+# Directory where regridded RAP data to BE DOWNSCALED is located
+RAP_data_to_downscale = /d7/dave/data/output/regridded/RAP 
+RAP_hgt_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/downscaling/RAPhgt.nc
+RAP_geo_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc 
+# Directory where downscaled data should be saved
+RAP_downscale_output_dir = /d7/dave/data/output/downscaled/RAP/staging 
+RAP_downscale_output_dir_0hr = /d7/dave/data/output/downscaled/RAP_0hr/staging
+RAP_finished_output_dir = /d7/dave/data/output/downscaled/RAP/final 
+RAP_finished_output_dir_0hr = /d7/dave/data/output/downscaled/RAP_0hr/final
+
+# CFS
+# Directories that contain distribution parameter files for CFS/NLDAS
+# In addition, output directory is specified here. 
+CFS_hgt_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/downscaling/cfsa_hgt1km.nc 
+CFS_geo_data = /d8/hydro-dm/IOC/forcing_engine/weighting_files/regridding/geo_dst.nc  
+
+#-------------------------------------------------
+#
+#  Parameters needed for layering/mixing
+#
+#  NOTE: Medium Range Forcing currently does not
+#  require any layering.
+#
+#-------------------------------------------------
+[layering]
+
+short_range_primary = /d7/dave/data/output/downscaled/HRRR/final 
+
+short_range_secondary = /d7/dave/data/output/downscaled/RAP/final 
+
+
+analysis_assimilation_tmp = /d7/dave/data/output/downscaled/tmp 
+analysis_assimilation_output = /d7/dave/data/output/final/Anal_Assim 
+qpe_combine_parm_dir = /d8/hydro-dm/IOC_TESTING/params/anal_assim/combine_params
+
+short_range_output = /d7/dave/data/output/final/Short_Range
+
+medium_range_output = /d7/dave/data/output/final/Medium_Range
+
+long_range_output =  /d7/dave/data/output/final/Long_Range
