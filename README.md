@@ -18,4 +18,4 @@ WRFDA-4DVAR: Shell scripts to run WRFDA 4DVAR system, I seperate each process ju
 
 WRF_MCS: Some scripts used in my MCS study, details please see the README in the folder
 
-wrf_hydro_forcing: These scripts are used in the WRF-Hydro forcing engine
+WRF_Hydro_Forcing: These scripts are used in the WRF-Hydro forcing engine
