@@ -1,0 +1,35 @@
+#!/bin/sh
+
+scheme="Mor"
+
+coldpool=-5
+scalefactor=10000.0
+
+lat1s=205
+lat2s=225
+lon1s=250
+lon2s=270
+
+x1=112.9
+x2=113.6
+y1=23.5
+y2=22.8
+
+sed -i "6s/^.*.$/scheme=\"$scheme\"/" horizontal.ncl
+sed -i "140s/^.*.$/resTT@cnLevels=(\/$coldpool,-1\/)/" horizontal.ncl
+sed -i "211s/^.*.$/lat1s=$lat1s/" horizontal.ncl
+sed -i "212s/^.*.$/lat2s=$lat2s/" horizontal.ncl
+sed -i "213s/^.*.$/lon1s=$lon1s/" horizontal.ncl
+sed -i "214s/^.*.$/lon2s=$lon2s/" horizontal.ncl
+sed -i "228s/^.*.$/x1=$x1/" horizontal.ncl
+sed -i "229s/^.*.$/x2=$x2/" horizontal.ncl
+sed -i "230s/^.*.$/y1=$y1/" horizontal.ncl
+sed -i "231s/^.*.$/y2=$y2/" horizontal.ncl
+ncl horizontal.ncl
+
+sed -i "8s/^.*.$/scheme=\"$scheme\"/" coldpoolevo.ncl
+sed -i "33s/^.*.$/lat1s=$lat1s/" coldpoolevo.ncl
+sed -i "34s/^.*.$/lat2s=$lat2s/" coldpoolevo.ncl
+sed -i "35s/^.*.$/lon1s=$lon1s/" coldpoolevo.ncl
+sed -i "36s/^.*.$/lon2s=$lon2s/" coldpoolevo.ncl
+ncl coldpoolevo.ncl

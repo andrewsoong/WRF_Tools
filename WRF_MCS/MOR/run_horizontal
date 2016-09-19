@@ -1,0 +1,20 @@
+#!/bin/bash
+sed -i "8s/^.*.$/timeslice02=\"2014-05-22\_08\:00\:00\"/" horizontal.ncl 
+sed -i "7s/^.*.$/timeslice01=\"2014-05-22\_07\:00\:00\"/" horizontal.ncl 
+ncl horizontal.ncl 
+
+sed -i "8s/^.*.$/timeslice02=\"2014-05-22\_07\:00\:00\"/" horizontal.ncl 
+sed -i "7s/^.*.$/timeslice01=\"2014-05-22\_06\:00\:00\"/" horizontal.ncl 
+ncl horizontal.ncl 
+
+sed -i "8s/^.*.$/timeslice02=\"2014-05-22\_04\:00\:00\"/" horizontal.ncl 
+sed -i "7s/^.*.$/timeslice01=\"2014-05-22\_03\:00\:00\"/" horizontal.ncl 
+ncl horizontal.ncl 
+
+sed -i "8s/^.*.$/timeslice02=\"2014-05-22\_05\:00\:00\"/" horizontal.ncl 
+sed -i "7s/^.*.$/timeslice01=\"2014-05-22\_04\:00\:00\"/" horizontal.ncl 
+ncl horizontal.ncl 
+
+sed -i "8s/^.*.$/timeslice02=\"2014-05-22\_06\:00\:00\"/" horizontal.ncl
+sed -i "7s/^.*.$/timeslice01=\"2014-05-22\_05\:00\:00\"/" horizontal.ncl
+ncl horizontal.ncl

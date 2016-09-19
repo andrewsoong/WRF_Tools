@@ -1,0 +1,70 @@
+#!/bin/sh
+
+scheme="THO"
+
+coldpool=-6
+scalefactor=10000.0
+
+lat1s=217
+lat2s=232
+lon1s=247
+lon2s=262
+
+x1=112.9
+x2=113.6
+y1=23.8
+y2=23.1
+
+sed -i "6s/^.*.$/scheme=\"$scheme\"/" horizontal.ncl 
+sed -i "140s/^.*.$/resTT@cnLevels=(\/$coldpool,-1\/)/" horizontal.ncl
+sed -i "211s/^.*.$/lat1s=$lat1s/" horizontal.ncl 
+sed -i "212s/^.*.$/lat2s=$lat2s/" horizontal.ncl 
+sed -i "213s/^.*.$/lon1s=$lon1s/" horizontal.ncl 
+sed -i "214s/^.*.$/lon2s=$lon2s/" horizontal.ncl 
+sed -i "228s/^.*.$/x1=$x1/" horizontal.ncl 
+sed -i "229s/^.*.$/x2=$x2/" horizontal.ncl 
+sed -i "230s/^.*.$/y1=$y1/" horizontal.ncl                                                      
+sed -i "231s/^.*.$/y2=$y2/" horizontal.ncl 
+ncl horizontal.ncl 
+
+sed -i "6s/^.*.$/scheme=\"$scheme\"/" vertical.ncl
+sed -i "21s/^.*.$/x1=$x1/" vertical.ncl
+sed -i "22s/^.*.$/x2=$x2/" vertical.ncl
+sed -i "23s/^.*.$/y1=$y1/" vertical.ncl
+sed -i "24s/^.*.$/y2=$y2/" vertical.ncl
+ncl vertical.ncl
+
+sed -i "6s/^.*.$/scheme=\"$scheme\"/" ice.ncl
+sed -i "8s/^.*.$/scalefactor=$scalefactor/" ice.ncl
+sed -i "19s/^.*.$/x1=$x1/" ice.ncl
+sed -i "20s/^.*.$/x2=$x2/" ice.ncl
+sed -i "21s/^.*.$/y1=$y1/" ice.ncl
+sed -i "22s/^.*.$/y2=$y2/" ice.ncl
+sed -i "105s/^.*.$/resG@cnLineColor=\"red\"/" ice.ncl        # graupel is red
+sed -i "111s/^.*.$/resG@cnLevels=ispan(0,200,4)/" ice.ncl
+sed -i "118s/^.*.$/resI@cnLineColor=\"green\"/" ice.ncl      # ice is green
+sed -i "124s/^.*.$/resI@cnLevels=ispan(0,200,1)/" ice.ncl
+sed -i "131s/^.*.$/resC@cnLineColor=\"yellow\"/" ice.ncl     # snow is yellow
+sed -i "137s/^.*.$/resC@cnLevels=ispan(0,200,2)/" ice.ncl
+ncl ice.ncl
+
+sed -i "6s/^.*.$/scheme=\"$scheme\"/" warm.ncl
+sed -i "8s/^.*.$/scalefactor=$scalefactor/" warm.ncl
+sed -i "19s/^.*.$/x1=$x1/" warm.ncl
+sed -i "20s/^.*.$/x2=$x2/" warm.ncl
+sed -i "21s/^.*.$/y1=$y1/" warm.ncl
+sed -i "22s/^.*.$/y2=$y2/" warm.ncl
+sed -i "107s/^.*.$/resQ@cnLineColor=\"red\"/" warm.ncl        # rain is red
+sed -i "113s/^.*.$/resQ@cnLevels=ispan(0,200,4)/" warm.ncl
+sed -i "120s/^.*.$/resI@cnLineColor=\"yellow\"/" warm.ncl     # total ice is yellow
+sed -i "126s/^.*.$/resI@cnLevels=ispan(0,200,4)/" warm.ncl  
+sed -i "133s/^.*.$/resC@cnLineColor=\"green\"/" warm.ncl      # cloud is green
+sed -i "139s/^.*.$/resC@cnLevels=ispan(0,200,4)/" warm.ncl
+ncl warm.ncl
+
+sed -i "8s/^.*.$/scheme=\"$scheme\"/" coldpoolevo.ncl
+sed -i "33s/^.*.$/lat1s=$lat1s/" coldpoolevo.ncl
+sed -i "34s/^.*.$/lat2s=$lat2s/" coldpoolevo.ncl
+sed -i "35s/^.*.$/lon1s=$lon1s/" coldpoolevo.ncl
+sed -i "36s/^.*.$/lon2s=$lon2s/" coldpoolevo.ncl
+ncl coldpoolevo.ncl
